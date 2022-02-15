@@ -1,0 +1,28 @@
+{
+  "files": {
+    "commands/ligand.js": [
+      {
+        "id": "c1c99c89-db02-4dce-a7ca-19e860c1af69",
+        "line": 4,
+        "version": 76,
+        "index": 152
+      }
+    ],
+    "index.js": [
+      {
+        "id": "446442b1-e752-4f9a-8d34-02dc54f4a99d",
+        "line": 1,
+        "version": 741,
+        "index": 40
+      }
+    ],
+    "proteins/proteins.js": [
+      {
+        "id": "44e82144-daf0-4529-a7f2-0c633d5c8ed5",
+        "line": 2,
+        "version": 714,
+        "index": 26
+      }
+    ]
+  }
+}
