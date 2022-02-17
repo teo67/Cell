@@ -1,16 +1,23 @@
 {
-  "name": "cell2",
+  "name": "cell",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.1.6"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teo67/Cell.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teo67/Cell/issues"
+  },
+  "homepage": "https://github.com/teo67/Cell#readme",
+  "description": ""
 }
