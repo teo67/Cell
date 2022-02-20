@@ -1,5 +1,5 @@
 const Command = require('./command');
-const { me } = require('../vars');
+const { me, viewing } = require('../vars');
 const Protein = require('../proteins/protein');
 const Container = require('../container');
 const proteins = require('../proteins/proteins');
@@ -21,6 +21,10 @@ const oneLayer = (container, newElementsA = []) => {
         if(content instanceof Container) {
             console.log(`-- Operations interrupted for inner container --`)
             if(oneLayer(content, newElements)) {
+                if(viewing.Top === content) {
+                    viewing.pop();
+                    console.log('Your current container was set back to account for the deleted container.');
+                }
                 container.contents.splice(i, 1);
                 i--;
             }
@@ -33,6 +37,10 @@ const oneLayer = (container, newElementsA = []) => {
                     doneFunction = true;
                     if(content.func(container.contents[j], newElements, proteins/*so that proteins can call themselves*/)) {
                         console.log(`${content.name} destroyed its target in the process!`);
+                        if(container.contents[j] instanceof Container && viewing.Top === container.contents[j]) {
+                            viewing.pop();
+                            console.log('Your current container was set back to account for the destroyed container.');
+                        }
                         container.contents.splice(j, 1);
                         j--;
                         if(j <= i) {
@@ -56,7 +64,7 @@ const oneLayer = (container, newElementsA = []) => {
     
     console.log('ENDING...');
 
-    if(container.checkEnd !== undefined && container.checkEnd(container)) {
+    if(container.checkEnd !== undefined && (container.checkEnd(container) || container.contents.length == 0) /* kill empty containers */) {
         console.log(`The container completed its function, and its processes are now being ended with end type: ${container.onEnd.name}.`);
         container.onEnd.func(container, newElementsA);
         return true; // kill container

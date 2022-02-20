@@ -1,4 +1,6 @@
 const Cell = require('./cell');
+const Stack = require('./stack');
 const me = new Cell();
-const previousContainer = null;
-module.exports = { me, previousContainer };
+let previousContainer = null;
+const viewing = new Stack(me);
+module.exports = { me, previousContainer, viewing };

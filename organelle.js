@@ -2,6 +2,7 @@ const proteins = require('./proteins/proteins');
 const Protein = require('./proteins/protein');
 const RandomParticle = require('./randomparticle');
 const MRNA = require('./genes/mRNA');
+const RNA = require('./genes/RNA');
 const DNA = require('./genes/DNA');
 
 class Organelle {
@@ -15,10 +16,49 @@ class Organelle {
     });
 
     static NUCLEUS = new Organelle('Nucleus', container => {
-        for(const content of container.contents) {
-            if(content instanceof DNA && content.status == 'euchromatin') {
-                
+        let has = {
+            dna: false, 
+            introns: false,
+            mrna: false, 
+            other: false
+        }
+        for(let i = 0; i < container.contents.length; i++) {
+            const content = container.contents[i];
+            if(content instanceof MRNA) {
+                has.mrna = true;
+            } else {
+                has.other = true;
             }
+            if(content instanceof DNA && content.status == 'euchromatin') {
+                has.dna = true;
+            } else if(content instanceof RNA) {
+                if(content.hasIntrons) {
+                    has.introns = true;
+                } else if(!content.hasCap) {
+                    content.hasCap = true;
+                    console.log('A GTP cap was added to a strand of pre-mRNA!');
+                } else if(!content.hasTail) {
+                    content.hasTail = true;
+                    console.log('A poly-A tail was added to a strand of pre-mRNA!');
+                } else {
+                    container.contents.push(new MRNA(content.codesFor));
+                    container.contents.splice(i, 1);
+                    i--;
+                    console.log('A strand of pre-mRNA with a cap and a tail was converted into mRNA!');
+                }
+            }
+        }
+        if(has.dna) {
+            console.log('RNA polymerase found its way to a segment of euchromatin in the nucleus!');
+            container.contents.push(proteins['RNA polymerase']);
+        }
+        if(has.introns) {
+            console.log('A spliceosome found its way to a segment of pre-mRNA with introns still included.');
+            container.contents.push(proteins['Spliceosome']);
+        }
+        if(has.mrna && (!has.other)) {
+            console.log('An mRNA-holding container in the nucleus was exported to the cytoplasm!');
+            container.location = Organelle.CYTOPLASM;
         }
     });
 
@@ -29,7 +69,7 @@ class Organelle {
         }
         for(let i = 0 ; i < container.contents.length; i++) {
             const content = container.contents[i];
-            if(content instanceof MRNA && (!content.codesFor.includes('IGNORE')) && (!content.codesFor.includes('NONCODING'))) {
+            if(content instanceof MRNA && (proteins[content.codesFor] !== undefined) && (!content.codesFor.includes('IGNORE')) && (!content.codesFor.includes('NONCODING'))) {
                 has.mrna = true;
             } else if(content instanceof Protein) {
                 has.protein = true;
@@ -58,7 +98,7 @@ class Organelle {
             srp: false
         };
         for(const content of container.contents) {
-            if(content instanceof MRNA && (!content.codesFor.includes('IGNORE')) && (!content.codesFor.includes('NONCODING'))) {
+            if(content instanceof MRNA && (proteins[content.codesFor] !== undefined) && (!content.codesFor.includes('IGNORE')) && (!content.codesFor.includes('NONCODING'))) {
                 has.mrna = content;
             } else if(content instanceof Protein && content.name == 'ribosome') {
                 has.ribosome = true;
