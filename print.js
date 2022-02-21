@@ -9,7 +9,7 @@ const print = (input, numSpaces = 0) => {
     for(let i = 0; i < input.contents.length; i++) {
         returning += `\n${' '.repeat(numSpaces)}${i}: `;
         if(input.contents[i] instanceof Container) {
-            returning += 'Inner Container';
+            returning += `Inner Container [${input.contents[i].location.name}]`;
             returning += print(input.contents[i], numSpaces + 4);
         } else if(input.contents[i] instanceof DNA) {
             returning += `${input.contents[i].status} DNA coding for ${input.contents[i].codesFor}`;

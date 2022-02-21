@@ -21,7 +21,7 @@ const oneLayer = (container, newElementsA = []) => {
         if(content instanceof Container) {
             console.log(`-- Operations interrupted for inner container --`)
             if(oneLayer(content, newElements)) {
-                if(viewing.Top === content) {
+                if(viewing.getContainer(me) === content) {
                     viewing.pop();
                     console.log('Your current container was set back to account for the deleted container.');
                 }
@@ -37,7 +37,7 @@ const oneLayer = (container, newElementsA = []) => {
                     doneFunction = true;
                     if(content.func(container.contents[j], newElements, proteins/*so that proteins can call themselves*/)) {
                         console.log(`${content.name} destroyed its target in the process!`);
-                        if(container.contents[j] instanceof Container && viewing.Top === container.contents[j]) {
+                        if(container.contents[j] instanceof Container && viewing.getContainer(me) === container.contents[j]) {
                             viewing.pop();
                             console.log('Your current container was set back to account for the destroyed container.');
                         }

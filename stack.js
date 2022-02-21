@@ -5,12 +5,21 @@ class StackNode {
     }
 }
 
-class Stack {
-    constructor(_top = null) {
-        this.top = (_top === null ? null : new StackNode(_top));
+class Stack { // first
+    constructor() {
+        this.top = null;
     }
-    get Top() {
-        return this.top.val;
+    getContainer(me) {
+        let returning = me;
+        const goBackwards = node => {
+            if(node === null) {
+                return;
+            }
+            goBackwards(node.next);
+            returning = returning.contents[node.val];
+        }
+        goBackwards(this.top);
+        return returning;
     }
     push(val) {
         this.top = new StackNode(val, this.top);
@@ -19,6 +28,9 @@ class Stack {
         if(this.top !== null) {
             this.top = this.top.next;
         }
+    }
+    clear() {
+        this.top = null;
     }
 }
 
